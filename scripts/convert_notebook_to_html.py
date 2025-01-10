@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-def convert_notebook_to_html(notebook_folder, notebook_name):
+def convert_notebook_to_html(notebook_name):
     """
     Converts a Jupyter Notebook to an HTML file, excluding the input cells (code), 
     and saves it in a 'reports' folder located at the same level as the notebook folder.
@@ -12,10 +12,13 @@ def convert_notebook_to_html(notebook_folder, notebook_name):
     """
     try:
         # Construct the full path to the notebook
-        notebook_path = os.path.join(notebook_folder, notebook_name)
+        relative_directory = os.path.join(os.path.dirname(__file__), '../notebooks')
+        notebook_path = os.path.join(relative_directory, notebook_name)
+        print(notebook_path)
 
         # Define the output folder ('reports' is at the same level as 'notebooks')
-        reports_folder = os.path.join(os.path.dirname(notebook_folder), 'reports')
+        reports_folder = os.path.join(os.path.dirname(__file__), '../reports')
+        print(reports_folder)
 
         # Ensure the 'reports' folder exists
         os.makedirs(reports_folder, exist_ok=True)
@@ -25,7 +28,7 @@ def convert_notebook_to_html(notebook_folder, notebook_name):
 
         # Run the nbconvert command
         subprocess.run([
-            'jupyter', 'nbconvert', '--to', 'html', '--no-input', 
+            'jupyter', 'nbconvert', '--to', 'html', '--execute', '--no-input', 
             '--output', output_path, notebook_path
         ], check=True)
 
@@ -40,4 +43,4 @@ def convert_notebook_to_html(notebook_folder, notebook_name):
 notebook_folder = '../notebooks'  # Relative path to the Notebook folder
 notebook_name = 'analysis_purchases.ipynb'
 
-convert_notebook_to_html(notebook_folder, notebook_name)
+convert_notebook_to_html( notebook_name)
